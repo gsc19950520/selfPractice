@@ -1,0 +1,15 @@
+package com.design.proxy.Static;
+
+public class BlackDuck implements Duck {
+
+	@Override
+	public void quack() {
+		System.out.println("ºÚÑ¼×Ó½Ð");
+	}
+
+	@Override
+	public void fly() {
+		System.out.println("Ñ¼×Ó·ÉÏè");
+	}
+
+}

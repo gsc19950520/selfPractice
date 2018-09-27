@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//src/com/design/proxy/rmi/HelloClient.java=UTF-8
+encoding//src/com/design/proxy/rmi/HelloServer.java=UTF-8
+encoding//src/com/design/proxy/rmi/ISayHello.java=UTF-8
+encoding//src/com/design/proxy/rmi/SayHelloImpl.java=UTF-8
+encoding//src/com/design/proxy/rmi/demo/User.java=UTF-8
+encoding//src/com/design/proxy/rmi/demo/UserClient.java=UTF-8
+encoding//src/com/design/proxy/rmi/demo/UserServer.java=UTF-8
+encoding//src/com/design/proxy/rmi/demo/User_Skeleton.java=UTF-8
+encoding//src/com/design/proxy/rmi/demo/User_Stub.java=UTF-8
