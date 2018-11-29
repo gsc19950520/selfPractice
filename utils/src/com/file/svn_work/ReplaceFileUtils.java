@@ -11,9 +11,7 @@ import java.util.Scanner;
 public class ReplaceFileUtils {
 
 	//区分service还是client
-//	private static String fileName = "service";
-//	private static String fileName = "client";
-	private static String fileName = "";
+	private static String fileName = "client";
 	//备份文件存放的地址
 	private static String buckupDir = "D:/backupFile/"  + fileName + "/" + System.currentTimeMillis() + "/";
 	
@@ -23,6 +21,12 @@ public class ReplaceFileUtils {
 	private static String oldFileUrl = "";
 	//需要更新的文件夹地址 
 	private static String desFileUrl = "D:/updateFile/" + fileName + "/";
+	
+	//版本上线的代码，每次更新文件就添加或者替换最新的文件
+	private static String preOnlineFileUrl = "D:/updateFile/preOnline/" + fileName + "/";
+	
+	//以往修改的文件统一存放
+	private static String historyUpdateFileUrl = "D:/updateFile/history/" + fileName + "/" + System.currentTimeMillis() + "/";
 	
 	private static List<String> fileUrls = new ArrayList<String>();
 	
@@ -52,6 +56,8 @@ public class ReplaceFileUtils {
 		}
 		buckupDir = "D:/backupFile/"  + fileName + "/" + System.currentTimeMillis() + "/";
 		desFileUrl = "D:/updateFile/" + fileName + "/";
+		preOnlineFileUrl = "D:/updateFile/preOnline/" + fileName + "/";
+		historyUpdateFileUrl = "D:/updateFile/history/" + fileName + "/" + System.currentTimeMillis() + "/";
 	}
 	
 	//将所有更新文件路径放入集合
@@ -90,21 +96,8 @@ public class ReplaceFileUtils {
 				//不存在，说明是新添加的文件
 				continue;
 			}
-			File backupDir = new File(backupFilePath.substring(0, backupFilePath.lastIndexOf("\\")));
-			File backupFile = new File(backupFilePath);
-			if(!backupDir.exists()) {
-				//文件夹不存在，创建文件夹
-				backupDir.mkdirs();
-				if(!backupFile.exists()) {
-					//文件不存在，创建文件
-					try {
-						backupFile.createNewFile();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-			ioCopy(oldFile, backupFile);
+			//将测试上的class文件拷贝到备份文件夹下
+			sendFileToPath(oldFile, backupFilePath);
 		}
 	}
 	
@@ -116,10 +109,36 @@ public class ReplaceFileUtils {
 			String oldFilePath = oldFileUrl + substring;
 			String desFilePath = desFileUrl + substring;
 			
-			File desFile = new File(desFilePath);
-			File oldFile = new File(oldFilePath);
-			ioCopy(desFile, oldFile);
+			File sourceFile = new File(desFilePath);
+			File targetFile = new File(oldFilePath);
+			ioCopy(sourceFile, targetFile);
+			
+			//再更新一份文件到需要上线的文件夹下
+			String preOnlinePath = preOnlineFileUrl + substring;
+			sendFileToPath(sourceFile,preOnlinePath);
+			//更新一份历史纪录文件夹
+			String historyUpdatePath = historyUpdateFileUrl + substring;
+			sendFileToPath(sourceFile,historyUpdatePath);
 		}
+	}
+	
+	//拷贝源文件到目标路径
+	private static void sendFileToPath(File sourceFile, String targetPath) {
+		File targetFile = new File(targetPath);
+		File targetDir = new File(targetPath.substring(0, targetPath.lastIndexOf("\\")));
+		if(!targetDir.exists()) {
+			//文件夹不存在，创建文件夹
+			targetDir.mkdirs();
+			if(!targetFile.exists()) {
+				//文件不存在，创建文件
+				try {
+					targetFile.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		ioCopy(sourceFile, targetFile);
 	}
 
 	/**
@@ -154,6 +173,39 @@ public class ReplaceFileUtils {
 		}
 	}
 	
+	// 删除文件夹，只能删除空文件夹
+	public static void delFolder(String folderPath) {
+		try {
+			delAllFile(folderPath); // 删除完里面所有内容
+			String filePath = folderPath;
+			filePath = filePath.toString();
+			File myFilePath = new File(filePath);
+			myFilePath.delete(); // 删除空文件夹
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}  
+
+	// 删除指定文件夹下的所有文件
+	public static void delAllFile(String path) {
+		File file = new File(path);
+		String[] tempList = file.list();
+		File temp = null;
+		for (int i = 0; i < tempList.length; i++) {
+			if (path.endsWith(File.separator)) {
+				temp = new File(path + tempList[i]);
+			} else {
+				temp = new File(path + File.separator + tempList[i]);
+			}
+			if (temp.isFile()) {
+				temp.delete();
+			}
+			if (temp.isDirectory()) {
+				delFolder(path + "/" + tempList[i]);// 再删除空文件夹
+			}
+		}
+	} 
+	
 	
 	//递归获取字符串s第m个c的位置 + 1
 	public static int indexString(String s, String c, int m) {
@@ -166,15 +218,18 @@ public class ReplaceFileUtils {
 	}
 	
 	public static void main(String[] args) {
-		readScreen();
-		refreshFileList(desFileUrl);
-		
-//		System.out.println(fileUrls);
-//		System.out.println(fileUrls.size());
 		//获取第二个/+1的位置
 //		System.out.println(indexString("C:/Users/18302/Desktop/下载", "/", 2));
 		
+		//输入项目名称
+		readScreen();
+		//将文件路径遍历成单个绝对路径集合
+		refreshFileList(desFileUrl);
+		//将测试项目中的文件备份
 		genBackupFile();
+		//替换新文件，并且替换上线的文件夹
 		replaceFile();
+		//删除此次更新的文件夹
+		delFolder(desFileUrl);
 	}
 }
