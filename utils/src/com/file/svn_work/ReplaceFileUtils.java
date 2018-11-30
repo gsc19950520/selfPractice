@@ -146,7 +146,7 @@ public class ReplaceFileUtils {
 	 * @param oldFile源文件
 	 * @param targetFile目标文件
 	 */
-	private static void ioCopy(File oldFile, File targetFile) {
+	public static void ioCopy(File oldFile, File targetFile) {
 		FileInputStream fis = null;
 		FileOutputStream fos = null;
 		try {
