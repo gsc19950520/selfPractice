@@ -1,4 +1,5 @@
-package com.file.svn_work;
+package doPackage;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,38 +11,28 @@ import java.util.Scanner;
 
 public class ReplaceFileUtils {
 
-	//Çø·Öservice»¹ÊÇclient
-	private static String fileName = "client";
-	//±¸·İÎÄ¼ş´æ·ÅµÄµØÖ·
+	//åŒºåˆ†serviceè¿˜æ˜¯client
+	private static String fileName = "";
+	//å¤‡ä»½æ–‡ä»¶å­˜æ”¾çš„åœ°å€
 	private static String buckupDir = "D:/backupFile/"  + fileName + "/" + System.currentTimeMillis() + "/";
 	
-	//²âÊÔ·şÎñÆ÷ÉÏµÄÎÄ¼ş¼ĞµØÖ·
-//	private static String oldFileUrl = "D:/tomcat-ddclient-80/webapps/ROOT/WEB-INF/classes/";
-//	private static String oldFileUrl = "D:/tomcat-ddservice-8181/webapps/ROOT/WEB-INF/classes/";
+	//æµ‹è¯•æœåŠ¡å™¨ä¸Šçš„æ–‡ä»¶å¤¹åœ°å€
 	private static String oldFileUrl = "";
-	//ĞèÒª¸üĞÂµÄÎÄ¼ş¼ĞµØÖ· 
+	//éœ€è¦æ›´æ–°çš„æ–‡ä»¶å¤¹åœ°å€ 
 	private static String desFileUrl = "D:/updateFile/" + fileName + "/";
 	
-	//°æ±¾ÉÏÏßµÄ´úÂë£¬Ã¿´Î¸üĞÂÎÄ¼ş¾ÍÌí¼Ó»òÕßÌæ»»×îĞÂµÄÎÄ¼ş
+	//ç‰ˆæœ¬ä¸Šçº¿çš„ä»£ç ï¼Œæ¯æ¬¡æ›´æ–°æ–‡ä»¶å°±æ·»åŠ æˆ–è€…æ›¿æ¢æœ€æ–°çš„æ–‡ä»¶
 	private static String preOnlineFileUrl = "D:/updateFile/preOnline/" + fileName + "/";
 	
-	//ÒÔÍùĞŞ¸ÄµÄÎÄ¼şÍ³Ò»´æ·Å
+	//ä»¥å¾€ä¿®æ”¹çš„æ–‡ä»¶ç»Ÿä¸€å­˜æ”¾
 	private static String historyUpdateFileUrl = "D:/updateFile/history/" + fileName + "/" + System.currentTimeMillis() + "/";
 	
 	private static List<String> fileUrls = new ArrayList<String>();
 	
-	/*static {
-		if(fileName.equals("service")) {
-			oldFileUrl = "D:/tomcat-ddservice-8181/webapps/ROOT/WEB-INF/classes/";
-		}else if(fileName.equals("client")){
-			oldFileUrl = "D:/tomcat-ddclient-80/webapps/ROOT/WEB-INF/classes/";
-		}
-	}*/
-	
 	@SuppressWarnings("resource")
 	private static void readScreen() {
 		Scanner s = new Scanner(System.in);
-		System.out.println("ÇëÊäÈëĞèÒªÌæ»»µÄÏîÄ¿Ãû³Æ:");
+		System.out.println("è¯·è¾“å…¥éœ€è¦æ›¿æ¢çš„é¡¹ç›®åç§°:");
 		String fileN = s.nextLine();
 		System.out.println(">>>" + fileN);
 		fileName = fileN;
@@ -49,18 +40,29 @@ public class ReplaceFileUtils {
 	}
 	
 	private static void init() {
-		if(fileName.equals("service")) {
-			oldFileUrl = "D:\\tomcat-ddservice-8181\\webapps\\ROOT\\WEB-INF\\classes\\";
-		}else if(fileName.equals("client")){
-			oldFileUrl = "D:\\tomcat-ddclient-80\\webapps\\ROOT\\WEB-INF\\classes\\";
+		if(fileName.equals("ddservice")) {
+			oldFileUrl = "D:\\tomcat-ddservice-8181";
+		}else if(fileName.equals("ddclient")){
+			oldFileUrl = "D:\\tomcat-ddclient-80";
+		}else if(fileName.equals("ddcmop")) {
+			oldFileUrl = "D:\\tomcat-ddcmop-8282";
+		}else if(fileName.equals("assistantservice")) {
+			oldFileUrl = "D:\\tomcat-assistantservice-9008";
+		}else if(fileName.equals("assistantclient")) {
+			oldFileUrl = "D:\\tomcat-assistantclient-9001";
+		}else if(fileName.equals("qd-client")){
+			oldFileUrl = "D:\\tomcat-qdclient-8198";
+		}else if(fileName.equals("tencent-service")){
+			oldFileUrl = "D:\\tomcat-tencent-service-8199";
 		}
+		oldFileUrl += "\\webapps\\ROOT\\WEB-INF\\classes\\";
 		buckupDir = "D:/backupFile/"  + fileName + "/" + System.currentTimeMillis() + "/";
 		desFileUrl = "D:/updateFile/" + fileName + "/";
 		preOnlineFileUrl = "D:/updateFile/preOnline/" + fileName + "/";
 		historyUpdateFileUrl = "D:/updateFile/history/" + fileName + "/" + System.currentTimeMillis() + "/";
 	}
 	
-	//½«ËùÓĞ¸üĞÂÎÄ¼şÂ·¾¶·ÅÈë¼¯ºÏ
+	//å°†æ‰€æœ‰æ›´æ–°æ–‡ä»¶è·¯å¾„æ”¾å…¥é›†åˆ
 	public static void refreshFileList (String strPath) {
 		File files = new File(strPath);
 		File[] fileList = files.listFiles();
@@ -69,12 +71,12 @@ public class ReplaceFileUtils {
 		}
 		for(int i = 0; i < fileList.length; i++) {
 			if(fileList[i].isDirectory()) {
-				//Èç¹û»¹ÊÇÎÄ¼ş¼ĞÔòµİ¹é´¦Àí
+				//å¦‚æœè¿˜æ˜¯æ–‡ä»¶å¤¹åˆ™é€’å½’å¤„ç†
 				refreshFileList(fileList[i].getAbsolutePath());
 			} else {
-				//»ñÈ¡ÎÄ¼ş¾ø¶ÔÂ·¾¶
+				//è·å–æ–‡ä»¶ç»å¯¹è·¯å¾„
 				String strFileName = fileList[i].getAbsolutePath();
-				//»ñÈ¡ÎÄ¼şºó×º
+				//è·å–æ–‡ä»¶åç¼€
                 String suffixName = strFileName.substring(strFileName.lastIndexOf(".") + 1,strFileName.length());  
                 if(suffixName.equals("class") || suffixName.equals("xml")) {
                 	fileUrls.add(fileList[i].getAbsolutePath());
@@ -83,7 +85,7 @@ public class ReplaceFileUtils {
 		}
 	}
 	
-	//½«±¸·İÊı¾İ·ÅÈë±¸·İÎÄ¼ş¼Ğ
+	//å°†å¤‡ä»½æ•°æ®æ”¾å…¥å¤‡ä»½æ–‡ä»¶å¤¹
 	public static void genBackupFile () {
 		for(String filePath : fileUrls) {
 			int index = indexString(filePath, "\\", 3);
@@ -93,44 +95,43 @@ public class ReplaceFileUtils {
 			
 			File oldFile = new File(oldFilePath);
 			if(!oldFile.exists()) {
-				//²»´æÔÚ£¬ËµÃ÷ÊÇĞÂÌí¼ÓµÄÎÄ¼ş
+				//ä¸å­˜åœ¨ï¼Œè¯´æ˜æ˜¯æ–°æ·»åŠ çš„æ–‡ä»¶
 				continue;
 			}
-			//½«²âÊÔÉÏµÄclassÎÄ¼ş¿½±´µ½±¸·İÎÄ¼ş¼ĞÏÂ
+			//å°†æµ‹è¯•ä¸Šçš„classæ–‡ä»¶æ‹·è´åˆ°å¤‡ä»½æ–‡ä»¶å¤¹ä¸‹
 			sendFileToPath(oldFile, backupFilePath);
 		}
 	}
 	
-	//Ìæ»»ÎÄ¼ş£¬½«ÀÏµÄÎÄ¼şÌæ»»ÎªĞÂÎÄ¼ş
+	//æ›¿æ¢æ–‡ä»¶ï¼Œå°†è€çš„æ–‡ä»¶æ›¿æ¢ä¸ºæ–°æ–‡ä»¶
 	public static void replaceFile () {
 		for(String filePath : fileUrls) {
 			int index = indexString(filePath, "\\", 3);
 			String substring = filePath.substring(index, filePath.length());
 			String oldFilePath = oldFileUrl + substring;
 			String desFilePath = desFileUrl + substring;
-			
+
 			File sourceFile = new File(desFilePath);
-			File targetFile = new File(oldFilePath);
-			ioCopy(sourceFile, targetFile);
-			
-			//ÔÙ¸üĞÂÒ»·İÎÄ¼şµ½ĞèÒªÉÏÏßµÄÎÄ¼ş¼ĞÏÂ
+			//æ›¿æ¢æˆ–æ–°å¢æ–‡ä»¶åˆ°é¡¹ç›®ä¸­
+			sendFileToPath(sourceFile, oldFilePath);
+			//å†æ›´æ–°ä¸€ä»½æ–‡ä»¶åˆ°éœ€è¦ä¸Šçº¿çš„æ–‡ä»¶å¤¹ä¸‹
 			String preOnlinePath = preOnlineFileUrl + substring;
 			sendFileToPath(sourceFile,preOnlinePath);
-			//¸üĞÂÒ»·İÀúÊ·¼ÍÂ¼ÎÄ¼ş¼Ğ
+			//æ›´æ–°ä¸€ä»½å†å²çºªå½•æ–‡ä»¶å¤¹
 			String historyUpdatePath = historyUpdateFileUrl + substring;
 			sendFileToPath(sourceFile,historyUpdatePath);
 		}
 	}
 	
-	//¿½±´Ô´ÎÄ¼şµ½Ä¿±êÂ·¾¶
-	private static void sendFileToPath(File sourceFile, String targetPath) {
+	//æ‹·è´æºæ–‡ä»¶åˆ°ç›®æ ‡è·¯å¾„
+	public static void sendFileToPath(File sourceFile, String targetPath) {
 		File targetFile = new File(targetPath);
 		File targetDir = new File(targetPath.substring(0, targetPath.lastIndexOf("\\")));
 		if(!targetDir.exists()) {
-			//ÎÄ¼ş¼Ğ²»´æÔÚ£¬´´½¨ÎÄ¼ş¼Ğ
+			//æ–‡ä»¶å¤¹ä¸å­˜åœ¨ï¼Œåˆ›å»ºæ–‡ä»¶å¤¹
 			targetDir.mkdirs();
 			if(!targetFile.exists()) {
-				//ÎÄ¼ş²»´æÔÚ£¬´´½¨ÎÄ¼ş
+				//æ–‡ä»¶ä¸å­˜åœ¨ï¼Œåˆ›å»ºæ–‡ä»¶
 				try {
 					targetFile.createNewFile();
 				} catch (IOException e) {
@@ -142,9 +143,9 @@ public class ReplaceFileUtils {
 	}
 
 	/**
-	 * IO¸´ÖÆ
-	 * @param oldFileÔ´ÎÄ¼ş
-	 * @param targetFileÄ¿±êÎÄ¼ş
+	 * IOå¤åˆ¶
+	 * @param oldFile æºæ–‡ä»¶
+	 * @param targetFile ç›®æ ‡æ–‡ä»¶
 	 */
 	public static void ioCopy(File oldFile, File targetFile) {
 		FileInputStream fis = null;
@@ -173,20 +174,20 @@ public class ReplaceFileUtils {
 		}
 	}
 	
-	// É¾³ıÎÄ¼ş¼Ğ£¬Ö»ÄÜÉ¾³ı¿ÕÎÄ¼ş¼Ğ
+	// åˆ é™¤æ–‡ä»¶å¤¹ï¼Œåªèƒ½åˆ é™¤ç©ºæ–‡ä»¶å¤¹
 	public static void delFolder(String folderPath) {
 		try {
-			delAllFile(folderPath); // É¾³ıÍêÀïÃæËùÓĞÄÚÈİ
+			delAllFile(folderPath); // åˆ é™¤å®Œé‡Œé¢æ‰€æœ‰å†…å®¹
 			String filePath = folderPath;
 			filePath = filePath.toString();
 			File myFilePath = new File(filePath);
-			myFilePath.delete(); // É¾³ı¿ÕÎÄ¼ş¼Ğ
+			myFilePath.delete(); // åˆ é™¤ç©ºæ–‡ä»¶å¤¹
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}  
 
-	// É¾³ıÖ¸¶¨ÎÄ¼ş¼ĞÏÂµÄËùÓĞÎÄ¼ş
+	// åˆ é™¤æŒ‡å®šæ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰æ–‡ä»¶
 	public static void delAllFile(String path) {
 		File file = new File(path);
 		String[] tempList = file.list();
@@ -201,13 +202,13 @@ public class ReplaceFileUtils {
 				temp.delete();
 			}
 			if (temp.isDirectory()) {
-				delFolder(path + "/" + tempList[i]);// ÔÙÉ¾³ı¿ÕÎÄ¼ş¼Ğ
+				delFolder(path + "/" + tempList[i]);// å†åˆ é™¤ç©ºæ–‡ä»¶å¤¹
 			}
 		}
 	} 
 	
 	
-	//µİ¹é»ñÈ¡×Ö·û´®sµÚm¸öcµÄÎ»ÖÃ + 1
+	//é€’å½’è·å–å­—ç¬¦ä¸²sç¬¬mä¸ªcçš„ä½ç½® + 1
 	public static int indexString(String s, String c, int m) {
 		if(m != 0) {
 			int formIndex = indexString(s, c, --m);
@@ -218,18 +219,15 @@ public class ReplaceFileUtils {
 	}
 	
 	public static void main(String[] args) {
-		//»ñÈ¡µÚ¶ş¸ö/+1µÄÎ»ÖÃ
-//		System.out.println(indexString("C:/Users/18302/Desktop/ÏÂÔØ", "/", 2));
-		
-		//ÊäÈëÏîÄ¿Ãû³Æ
+		//è¾“å…¥é¡¹ç›®åç§°
 		readScreen();
-		//½«ÎÄ¼şÂ·¾¶±éÀú³Éµ¥¸ö¾ø¶ÔÂ·¾¶¼¯ºÏ
+		//å°†æ–‡ä»¶è·¯å¾„éå†æˆå•ä¸ªç»å¯¹è·¯å¾„é›†åˆ
 		refreshFileList(desFileUrl);
-		//½«²âÊÔÏîÄ¿ÖĞµÄÎÄ¼ş±¸·İ
+		//å°†æµ‹è¯•é¡¹ç›®ä¸­çš„æ–‡ä»¶å¤‡ä»½
 		genBackupFile();
-		//Ìæ»»ĞÂÎÄ¼ş£¬²¢ÇÒÌæ»»ÉÏÏßµÄÎÄ¼ş¼Ğ
+		//æ›¿æ¢æ–°æ–‡ä»¶ï¼Œå¹¶ä¸”æ›¿æ¢ä¸Šçº¿çš„æ–‡ä»¶å¤¹
 		replaceFile();
-		//É¾³ı´Ë´Î¸üĞÂµÄÎÄ¼ş¼Ğ
+		//åˆ é™¤æ­¤æ¬¡æ›´æ–°çš„æ–‡ä»¶å¤¹
 		delFolder(desFileUrl);
 	}
 }
