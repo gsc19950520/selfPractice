@@ -23,7 +23,7 @@ public class NYPizzaStore extends PizzaStore{
 		}else if(type.equals("Cheese")) {
 			return new CheesePizza(ingredientFactory);
 		}else {
-			System.out.println("不支持当前披萨的创建");
+			System.out.println("涓嶆敮鎸佸綋鍓嶆姭钀ㄧ殑鍒涘缓");
 			return null;
 		}
 	}
